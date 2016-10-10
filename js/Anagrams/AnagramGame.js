@@ -98,6 +98,10 @@ export class AnagramGame extends Component {
         });
     }
 
+    onResultsClicked() {
+        this.props.onResults();
+    }
+
     getPageTitle() {
         let diff = this.props.difficulty.charAt(0).toUpperCase() + this.props.difficulty.slice(1);
         return diff + " mode challenge";
@@ -121,7 +125,15 @@ export class AnagramGame extends Component {
 
         if (currentAnagram === null || currentAnswer === null) {
             return (
-                <Text>Done! Get Results</Text>
+                <View style={styles.container}>
+                    <Text>Done! Get Results</Text>
+
+                    <TouchableNativeFeedback onPress={this.onResultsClicked.bind(this)}>
+                        <View style={styles.wideButton}>
+                            <Text style={styles.wideButtonText}>Go To Results</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                </View>
             );
         }
         else {
@@ -159,7 +171,8 @@ export class AnagramGame extends Component {
 
 AnagramGame.propTypes = {
     onBack: React.PropTypes.func.isRequired,
-    difficulty: React.PropTypes.string.isRequired
+    difficulty: React.PropTypes.string.isRequired,
+    onResults: React.PropTypes.func
 };
 
 const styles = StyleSheet.create({

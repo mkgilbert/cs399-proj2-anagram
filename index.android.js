@@ -10,6 +10,7 @@ import Home from './js/Home';
 import About from './js/About';
 import Challenge from './js/Challenge';
 import AnagramGame from './js/Anagrams/AnagramGame';
+import Results from './js/Results';
 
 /**
  * Represents the entire app
@@ -95,6 +96,7 @@ class cs399_proj2_anagram extends Component {
                 return (
                     <AnagramGame
                         difficulty="easy"
+                        onResults={this.onScreenPush.bind(this, "results", navigator)}
                         onBack={this.onScreenPop.bind(this, navigator)}
                     />
                 );
@@ -102,7 +104,14 @@ class cs399_proj2_anagram extends Component {
                 return (
                     <AnagramGame
                         difficulty="hard"
+                        onResults={this.onScreenPush.bind(this, "results", navigator)}
                         onBack={this.onScreenPop.bind(this, navigator)}
+                    />
+                );
+            case "results":
+                return (
+                    <Results
+                        onBack={this.onScreenPush.bind(this, "home", navigator)}
                     />
                 );
         }

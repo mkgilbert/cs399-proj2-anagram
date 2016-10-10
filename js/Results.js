@@ -58,8 +58,6 @@ export class Results extends Component {
                 <Icon.ToolbarAndroid
                     style={styles.toolbar}
                     title="Results"
-                    navIconName="arrow-left"
-                    onIconClicked={this.onBackClicked.bind(this)}
                 />
                 <Text>Results Page</Text>
             </View>
