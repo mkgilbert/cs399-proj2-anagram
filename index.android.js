@@ -96,7 +96,6 @@ class cs399_proj2_anagram extends Component {
                     <AnagramGame
                         difficulty="easy"
                         onBack={this.onScreenPop.bind(this, navigator)}
-                        onNext={this.onScreenPush.bind(this, "anagramgame", navigator)}
                     />
                 );
             case "hard":
@@ -104,7 +103,6 @@ class cs399_proj2_anagram extends Component {
                     <AnagramGame
                         difficulty="hard"
                         onBack={this.onScreenPop.bind(this, navigator)}
-                        onNext={this.onScreenPush.bind(this, "anagramgame", navigator)}
                     />
                 );
         }

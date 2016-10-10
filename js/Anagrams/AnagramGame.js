@@ -24,8 +24,19 @@ export class AnagramGame extends Component {
 
     constructor(props) {
         super(props);
+
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
+
+        this.state = {
+            anagrams: {
+                "map": "amp",
+                "ant": "tan",
+                "how": "who"
+            },
+            currentAnswer: "",
+            currentAnagram: ""
+        };
     }
 
     /**
@@ -54,8 +65,19 @@ export class AnagramGame extends Component {
     /**
      * Called when the next button has been pressed
      */
-    onNextClicked() {
-        this.props.onNext();
+    onNextClicked(guess, currentAnagram) {
+        if (guess == this.state.currentAnswer) {
+            console.log("guess " + guess + " is correct");
+        }
+        else {
+            console.log("guess " + guess + " is incorrect");
+        }
+        // copy the state and remove the previously used anagram. then put the new hash back into the state
+        var anagramsCopy = Object.assign({}, this.state.anagrams);
+        delete anagramsCopy[currentAnagram];
+        this.setState({
+            anagrams: anagramsCopy
+        });
     }
 
     getPageTitle() {
@@ -63,35 +85,57 @@ export class AnagramGame extends Component {
         return diff + " mode challenge";
     }
 
+    getLength(hash) {
+        return Object.keys(hash).length;
+    }
     /**
      * Render the component
      */
     render() {
+        var currentAnagram, currentAnswer = null;
+        if (this.getLength(this.state.anagrams) == 0) {
+            console.log("all anagrams used");
+        }
+        else {
+            currentAnagram = Object.keys(this.state.anagrams)[0];
+            currentAnswer = this.state.anagrams[currentAnagram];
+        }
 
-        // Render the home page
-        return (
-            <View style={styles.container}>
-                <Icon.ToolbarAndroid
-                    style={styles.toolbar}
-                    title={this.getPageTitle()}
-                    navIconName="arrow-left"
-                    onIconClicked={this.onBackClicked.bind(this)}
-                />
+        if (currentAnagram === null || currentAnswer === null) {
+            return (
+                <Text>Done! Get Results</Text>
+            );
+        }
+        else {
 
-                <Text>Anagram will go here</Text>
+            var guess = "arm";
 
-                <TouchableNativeFeedback onPress={this.onNextClicked.bind(this)}>
-                    <View style={styles.wideButton}>
-                        <Text style={styles.wideButtonText}>Next</Text>
-                    </View>
-                </TouchableNativeFeedback>
-            </View>
-        );
+            return (
+                <View style={styles.container}>
+                    <Icon.ToolbarAndroid
+                        style={styles.toolbar}
+                        title={this.getPageTitle()}
+                        navIconName="arrow-left"
+                        onIconClicked={this.onBackClicked.bind(this)}
+                    />
+
+                    <AnagramDisplay
+                        anagram={currentAnagram}
+                        answer={currentAnswer}
+                    />
+
+                    <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, guess, currentAnagram)}>
+                        <View style={styles.wideButton}>
+                            <Text style={styles.wideButtonText}>Next</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                </View>
+            );
+        }
     }
 }
 
 AnagramGame.propTypes = {
-    onNext: React.PropTypes.func.isRequired,
     onBack: React.PropTypes.func.isRequired,
     difficulty: React.PropTypes.string.isRequired
 };
