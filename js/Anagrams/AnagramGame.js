@@ -9,6 +9,7 @@ import {
     TouchableNativeFeedback,
     StyleSheet,
     Text,
+    TextInput,
     View,
     BackAndroid
 } from 'react-native';
@@ -28,14 +29,29 @@ export class AnagramGame extends Component {
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
 
-        this.state = {
-            anagrams: {
+        if (this.props.difficulty == "hard") {
+            var theAnagrams = {
+                "resells": "sellers",
+                "mutilate": "ultimate",
+                "thickens": "kitchens",
+                "wreathes": "weathers",
+                "nameless": "salesman"
+            };
+        }
+        else {
+            var theAnagrams = {
                 "map": "amp",
                 "ant": "tan",
-                "how": "who"
-            },
+                "how": "who",
+                "clam": "calm",
+                "dial": "laid"
+            };
+        }
+        this.state = {
+            anagrams: theAnagrams,
             currentAnswer: "",
-            currentAnagram: ""
+            currentAnagram: "",
+            guess: ""
         };
     }
 
@@ -65,7 +81,8 @@ export class AnagramGame extends Component {
     /**
      * Called when the next button has been pressed
      */
-    onNextClicked(guess, currentAnagram) {
+    onNextClicked(currentAnagram) {
+        let guess = this.state.guess;
         if (guess == this.state.currentAnswer) {
             console.log("guess " + guess + " is correct");
         }
@@ -76,7 +93,8 @@ export class AnagramGame extends Component {
         var anagramsCopy = Object.assign({}, this.state.anagrams);
         delete anagramsCopy[currentAnagram];
         this.setState({
-            anagrams: anagramsCopy
+            anagrams: anagramsCopy,
+            guess: ""
         });
     }
 
@@ -107,9 +125,6 @@ export class AnagramGame extends Component {
             );
         }
         else {
-
-            var guess = "arm";
-
             return (
                 <View style={styles.container}>
                     <Icon.ToolbarAndroid
@@ -124,7 +139,14 @@ export class AnagramGame extends Component {
                         answer={currentAnswer}
                     />
 
-                    <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, guess, currentAnagram)}>
+                    <Text>Your Guess:</Text>
+                    <TextInput
+                        style={{height: 40, borderColor: 'gray', borderWidth: 2, margin: 10}}
+                        onChangeText={(guess) => this.setState({guess})}
+                        value={this.state.guess}
+                    />
+
+                    <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, currentAnagram)}>
                         <View style={styles.wideButton}>
                             <Text style={styles.wideButtonText}>Next</Text>
                         </View>

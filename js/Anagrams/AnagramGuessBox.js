@@ -4,6 +4,7 @@ import {
     AppRegistry,
     StyleSheet,
     Text,
+    TextInput,
     View
 } from 'react-native';
 
@@ -14,46 +15,22 @@ export class AnagramGuessBox extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {text: "Your Guess"};
     }
 
     /**
      * Render the component
      */
-    // TODO: remove this old code from calculator app
     render() {
-        // Compute what will be rendered for the current equation
-        let displayText = this.props.value;
-        if (this.props.isResult && displayText.length == 0) {
-            displayText = "Syntax Error";
-        } else if (displayText.includes("Infinity")) {
-            displayText = "Error: Division by zero";
-        }
-
-        // Compute what will be rendered for the preview
-        let evald = this.props.calcFunction(this.props.value);
-        if (evald === null) {
-            evald = " ";
-        }
-        if (evald.toString().includes("Infinity")) {
-            evald = "Error: Division by zero";
-        }
-
-        // Render the result
         return (
-            <View style={styles.container}>
-                <Text style={styles.text}>{displayText}</Text>
-                {this.props.isResult ? null :
-                    <Text style={styles.preview}>{evald}</Text>
-                }
-            </View>
+            <TextInput
+                style={{height: 40, borderColor: 'gray', borderWidth: 2}}
+                onChangeText={(text) => this.setState({text})}
+                value={this.state.text}
+            />
         );
     }
 }
-AnagramGuessBox.propTypes = {
-    value: React.PropTypes.string,
-    isResult: React.PropTypes.bool.isRequired,
-    calcFunction: React.PropTypes.func.isRequired
-};
 
 const styles = StyleSheet.create({
     container: {
