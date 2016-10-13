@@ -110,9 +110,7 @@ class cs399_proj2_anagram extends Component {
                 );
             case "results":
                 return (
-                    <Results
-                        onBack={this.onScreenPush.bind(this, "home", navigator)}
-                    />
+                    <Results navigator={navigator}/>
                 );
         }
     }

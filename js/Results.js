@@ -21,7 +21,6 @@ export class Results extends Component {
 
     constructor(props) {
         super(props);
-
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
     }
@@ -44,8 +43,21 @@ export class Results extends Component {
      * Called when the back button has been pressed: either hardware back or the back button on the toolbar
      * @returns {boolean}
      */
+    onHomeClicked() {
+        this.props.navigator.popToTop();
+        return true;
+    }
+
     onBackClicked() {
-        this.props.onBack();
+        this.onHomeClicked();
+    }
+
+    /**
+     * Called when user wants to start another game with a different challenge
+     * @returns {boolean}
+     */
+    onPlayAgainClicked() {
+        this.props.navigator.popN(2);
         return true;
     }
 
@@ -60,14 +72,20 @@ export class Results extends Component {
                     title="Results"
                 />
                 <Text>Results Page</Text>
+                <TouchableNativeFeedback onPress={this.onHomeClicked.bind(this)}>
+                    <View style={styles.wideButton}>
+                        <Text style={styles.wideButtonText}>Back to Home</Text>
+                    </View>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={this.onPlayAgainClicked.bind(this)}>
+                    <View style={styles.wideButton}>
+                        <Text style={styles.wideButtonText}>Play Again</Text>
+                    </View>
+                </TouchableNativeFeedback>
             </View>
         );
     }
 }
-
-Results.propTypes = {
-    onBack: React.PropTypes.func.isRequired
-};
 
 const styles = StyleSheet.create({
     container: {
@@ -87,13 +105,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0.5,
         borderBottomColor: '#666666'
     },
-    equation: {
-        fontSize: 25,
-        marginRight: 10
+    wideButton: {
+        backgroundColor: '#1FB6FF',
+        margin: 10,
+        marginTop: 0,
+        marginBottom: 5,
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
-    result: {
-        fontSize: 15,
-        marginRight: 10
+    wideButtonText: {
+        fontSize: 20
     }
 });
 
