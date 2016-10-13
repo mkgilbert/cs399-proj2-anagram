@@ -50,11 +50,21 @@ export class Challenge extends Component {
     }
 
     onEasyClicked() {
-        this.props.onEasy();
+        this.onGameStartClicked("easy");
+        //this.props.onEasy();
     }
 
     onHardClicked() {
-        this.props.onHard();
+        this.onGameStartClicked("hard");
+        //this.props.onHard();
+    }
+
+    onGameStartClicked(difficulty) {
+        this.props.navigator.push({
+            id: "game",
+            difficulty: difficulty
+        })
+        ;
     }
 
     render() {

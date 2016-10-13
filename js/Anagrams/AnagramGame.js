@@ -29,7 +29,9 @@ export class AnagramGame extends Component {
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
 
-        if (this.props.difficulty == "hard") {
+        this.difficulty = this.props.route.difficulty;
+
+        if (this.difficulty == "hard") {
             var theAnagrams = {
                 "resells": "sellers",
                 "mutilate": "ultimate",
@@ -51,8 +53,13 @@ export class AnagramGame extends Component {
             anagrams: theAnagrams,
             currentAnswer: "",
             currentAnagram: "",
-            guess: ""
+            guess: "",
+            timeRemaining: 300
         };
+
+        setInterval(() => {
+            this.setState({timeRemaining: this.state.timeRemaining - 1})
+        }, 1000);
     }
 
     /**
@@ -99,11 +106,33 @@ export class AnagramGame extends Component {
     }
 
     onResultsClicked() {
-        this.props.onResults();
+        this.props.navigator.push({
+            id: "results",
+            gameData: "testing"
+        });
+        //this.props.onResults();
+    }
+
+    timeToString() {
+        if (this.state.timeRemaining < 0)
+            return 0;
+        let t = this.state.timeRemaining;
+        let mins = Math.floor(t/60);
+        if (mins > 0) {
+            t -= mins*60;
+            let secs = t;
+            if (secs < 10){
+                secs = "0" + secs;
+            }
+            return mins + ":" + secs;
+        }
+        else {
+            return t;
+        }
     }
 
     getPageTitle() {
-        let diff = this.props.difficulty.charAt(0).toUpperCase() + this.props.difficulty.slice(1);
+        let diff = this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1);
         return diff + " mode challenge";
     }
 
@@ -145,7 +174,7 @@ export class AnagramGame extends Component {
                         navIconName="arrow-left"
                         onIconClicked={this.onBackClicked.bind(this)}
                     />
-
+                    <Text>{this.timeToString()}</Text>
                     <AnagramDisplay
                         anagram={currentAnagram}
                         answer={currentAnswer}
@@ -170,9 +199,7 @@ export class AnagramGame extends Component {
 }
 
 AnagramGame.propTypes = {
-    onBack: React.PropTypes.func.isRequired,
-    difficulty: React.PropTypes.string.isRequired,
-    onResults: React.PropTypes.func
+    onBack: React.PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

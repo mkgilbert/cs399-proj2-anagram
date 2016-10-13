@@ -71,46 +71,30 @@ class cs399_proj2_anagram extends Component {
             // Render the about screen
             case "about":
                 return (
-                    <About
-                        onBack={this.onScreenPop.bind(this, navigator)}
-                    />
+                    <About onBack={this.onScreenPop.bind(this, navigator)} />
                 );
             // Render Challenge choice screen
             case "challenge":
                 return (
                     <Challenge
+                        route={route}
+                        navigator={navigator}
                         onBack={this.onScreenPop.bind(this, navigator)}
-                        onEasy={this.onScreenPush.bind(this, "easy", navigator)}
-                        onHard={this.onScreenPush.bind(this, "hard", navigator)}
                     />
                 );
-            // Render Anagram Game screen
-            case "anagramgame":
+
+            case "game":
                 return (
                     <AnagramGame
-                        onBack={this.onScreenPop.bind(this, navigator)}
-                        onNext={this.onScreenPush.bind(this, "anagramgame", navigator)}
-                    />
-                );
-            case "easy":
-                return (
-                    <AnagramGame
-                        difficulty="easy"
-                        onResults={this.onScreenPush.bind(this, "results", navigator)}
+                        route={route}
+                        navigator={navigator}
                         onBack={this.onScreenPop.bind(this, navigator)}
                     />
                 );
-            case "hard":
-                return (
-                    <AnagramGame
-                        difficulty="hard"
-                        onResults={this.onScreenPush.bind(this, "results", navigator)}
-                        onBack={this.onScreenPop.bind(this, navigator)}
-                    />
-                );
+
             case "results":
                 return (
-                    <Results navigator={navigator}/>
+                    <Results route={route} navigator={navigator}/>
                 );
         }
     }

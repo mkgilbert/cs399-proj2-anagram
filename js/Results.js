@@ -23,6 +23,9 @@ export class Results extends Component {
         super(props);
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
+
+        // store game data that was passed into the route from the navigator.push() method
+        this.gameData = this.props.route.gameData;
     }
 
     /**
@@ -72,6 +75,7 @@ export class Results extends Component {
                     title="Results"
                 />
                 <Text>Results Page</Text>
+                <Text>Total anagrams: {this.gameData}</Text>
                 <TouchableNativeFeedback onPress={this.onHomeClicked.bind(this)}>
                     <View style={styles.wideButton}>
                         <Text style={styles.wideButtonText}>Back to Home</Text>
