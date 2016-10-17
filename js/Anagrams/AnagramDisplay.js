@@ -33,8 +33,7 @@ export class AnagramDisplay extends Component {
 }
 
 AnagramDisplay.propTypes = {
-    anagram: React.PropTypes.string.isRequired,
-    answer: React.PropTypes.string.isRequired
+    anagram: React.PropTypes.string.isRequired
 };
 
 const styles = StyleSheet.create({

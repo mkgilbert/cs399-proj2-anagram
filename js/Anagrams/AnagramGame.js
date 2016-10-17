@@ -16,7 +16,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AnagramGuessBox from './AnagramGuessBox';
 import AnagramDisplay from './AnagramDisplay';
-
+import clone from 'clone';
 
 /**
  * Represents the game home screen
@@ -31,28 +31,29 @@ export class AnagramGame extends Component {
 
         this.difficulty = this.props.route.difficulty;
 
+        let anagrams;
+
         if (this.difficulty == "hard") {
-            var theAnagrams = {
-                "resells": "sellers",
-                "mutilate": "ultimate",
-                "thickens": "kitchens",
-                "wreathes": "weathers",
-                "nameless": "salesman"
-            };
+            anagrams = [
+                { "question": "resells", "answer": "sellers" },
+                { "question": "mutilate", "answer": "ultimate" },
+                { "question": "thickens", "answer": "kitchens" },
+                { "question": "wreathes", "answer": "weathers" },
+                { "question": "nameless", "answer": "salesman" }
+            ];
         }
         else {
-            var theAnagrams = {
-                "map": "amp",
-                "ant": "tan",
-                "how": "who",
-                "clam": "calm",
-                "dial": "laid"
-            };
+            anagrams = [
+                { "question": "map", "answer": "amp" },
+                { "question": "ant", "answer": "tan" },
+                { "question": "how", "answer": "who" },
+                { "question": "clam", "answer": "calm" },
+                { "question": "dial", "answer": "laid" },
+            ];
         }
         this.state = {
-            anagrams: theAnagrams,
-            currentAnswer: "",
-            currentAnagram: "",
+            anagrams: anagrams,
+            questionNumber: 0,
             guess: "",
             timeRemaining: 300
         };
@@ -90,17 +91,11 @@ export class AnagramGame extends Component {
      */
     onNextClicked(currentAnagram) {
         let guess = this.state.guess;
-        if (guess == this.state.currentAnswer) {
-            console.log("guess " + guess + " is correct");
-        }
-        else {
-            console.log("guess " + guess + " is incorrect");
-        }
-        // copy the state and remove the previously used anagram. then put the new hash back into the state
-        var anagramsCopy = Object.assign({}, this.state.anagrams);
-        delete anagramsCopy[currentAnagram];
+        let anagrams = clone(this.state.anagrams);
+        anagrams[this.state.questionNumber].guess = guess;
         this.setState({
-            anagrams: anagramsCopy,
+            anagrams: anagrams,
+            questionNumber: this.state.questionNumber + 1,
             guess: ""
         });
     }
@@ -143,16 +138,8 @@ export class AnagramGame extends Component {
      * Render the component
      */
     render() {
-        var currentAnagram, currentAnswer = null;
-        if (this.getLength(this.state.anagrams) == 0) {
-            console.log("all anagrams used");
-        }
-        else {
-            currentAnagram = Object.keys(this.state.anagrams)[0];
-            currentAnswer = this.state.anagrams[currentAnagram];
-        }
 
-        if (currentAnagram === null || currentAnswer === null) {
+        if (this.state.questionNumber === this.state.anagrams.length) {
             return (
                 <View style={styles.container}>
                     <Text>Done! Get Results</Text>
@@ -165,36 +152,36 @@ export class AnagramGame extends Component {
                 </View>
             );
         }
-        else {
-            return (
-                <View style={styles.container}>
-                    <Icon.ToolbarAndroid
-                        style={styles.toolbar}
-                        title={this.getPageTitle()}
-                        navIconName="arrow-left"
-                        onIconClicked={this.onBackClicked.bind(this)}
-                    />
-                    <Text>{this.timeToString()}</Text>
-                    <AnagramDisplay
-                        anagram={currentAnagram}
-                        answer={currentAnswer}
-                    />
 
-                    <Text>Your Guess:</Text>
-                    <TextInput
-                        style={{height: 40, borderColor: 'gray', borderWidth: 2, margin: 10}}
-                        onChangeText={(guess) => this.setState({guess})}
-                        value={this.state.guess}
-                    />
+        let currentAnagram = this.state.anagrams[this.state.questionNumber].question;
 
-                    <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, currentAnagram)}>
-                        <View style={styles.wideButton}>
-                            <Text style={styles.wideButtonText}>Next</Text>
-                        </View>
-                    </TouchableNativeFeedback>
-                </View>
-            );
-        }
+        return (
+            <View style={styles.container}>
+                <Icon.ToolbarAndroid
+                    style={styles.toolbar}
+                    title={this.getPageTitle()}
+                    navIconName="arrow-left"
+                    onIconClicked={this.onBackClicked.bind(this)}
+                />
+                <Text>{this.timeToString()}</Text>
+                <AnagramDisplay
+                    anagram={currentAnagram}
+                />
+
+                <Text>Your Guess:</Text>
+                <TextInput
+                    style={{height: 40, borderColor: 'gray', borderWidth: 2, margin: 10}}
+                    onChangeText={(guess) => this.setState({guess})}
+                    value={this.state.guess}
+                />
+
+                <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, currentAnagram)}>
+                    <View style={styles.wideButton}>
+                        <Text style={styles.wideButtonText}>Next</Text>
+                    </View>
+                </TouchableNativeFeedback>
+            </View>
+        );
     }
 }
 
