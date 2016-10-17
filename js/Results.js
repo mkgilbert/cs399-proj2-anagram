@@ -72,6 +72,12 @@ export class Results extends Component {
             fontWeight: "bold",
             fontSize: 16
         };
+        let score = 0;
+        for (let i = 0; i < gameData.length; i++) {
+            if (gameData[i].guess!== undefined && gameData[i].guess.toLowerCase() === gameData[i].answer.toLowerCase())
+                score++;
+        }
+        let totalQuestions = gameData.length;
         return (
             <View style={styles.container}>
                 <Icon.ToolbarAndroid
@@ -92,7 +98,7 @@ export class Results extends Component {
                                 fontSize: 14,
                                 color: "red"
                             };
-                            if (anagram.guess.toLowerCase() === anagram.answer.toLowerCase())
+                            if (anagram.guess!== undefined && anagram.guess.toLowerCase() === anagram.answer.toLowerCase())
                                 colStyle.color = "green";
                             return (
                                 <View key={i} style={styles.row}>
@@ -103,6 +109,9 @@ export class Results extends Component {
                             );
                         })}
                     </View>
+                    <Text style={styles.score}>
+                        {score} / {totalQuestions}
+                    </Text>
                     <View style={styles.buttons}>
                         <TouchableNativeFeedback onPress={this.onHomeClicked.bind(this)}>
                             <View style={styles.wideButton}>
@@ -158,6 +167,10 @@ const styles = StyleSheet.create({
     },
     buttons: {
         marginBottom: 0
+    },
+    score: {
+        fontSize: 50,
+        textAlign: "center"
     }
 });
 

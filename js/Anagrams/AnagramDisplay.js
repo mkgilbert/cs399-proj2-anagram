@@ -38,7 +38,6 @@ AnagramDisplay.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        height: 100,
         justifyContent: 'flex-start',
         alignItems: 'center',
         margin: 10
@@ -50,7 +49,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     buttonText: {
-        fontSize: 40,
+        fontSize: 30
     }
 });
 

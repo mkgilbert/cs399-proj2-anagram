@@ -61,11 +61,12 @@ export class About extends Component {
                     navIconName="arrow-left"
                     onIconClicked={this.onBackClicked.bind(this)}
                 />
-                <Text>About Page</Text>
+                <Text style={styles.centerText}>This app is gr8te 10/10</Text>
             </View>
         );
     }
 }
+
 
 About.propTypes = {
     onBack: React.PropTypes.func.isRequired
@@ -82,20 +83,10 @@ const styles = StyleSheet.create({
         height: 56,
         backgroundColor: '#e9eaed'
     },
-    row: {
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        padding: 10,
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#666666'
-    },
-    equation: {
-        fontSize: 25,
-        marginRight: 10
-    },
-    result: {
-        fontSize: 15,
-        marginRight: 10
+    centerText: {
+        marginTop: 40,
+        textAlign: "center",
+        fontSize: 40
     }
 });
 

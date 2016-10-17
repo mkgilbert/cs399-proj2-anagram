@@ -55,7 +55,7 @@ export class AnagramGame extends Component {
             anagrams: anagrams,
             questionNumber: 0,
             guess: "",
-            timeRemaining: 300
+            timeRemaining: 150
         };
     }
 
@@ -139,10 +139,16 @@ export class AnagramGame extends Component {
      */
     render() {
 
-        if (this.state.questionNumber === this.state.anagrams.length) {
+        if (this.state.questionNumber === this.state.anagrams.length || this.state.timeRemaining <= 0) {
             return (
-                <View style={styles.container}>
-                    <Text>Done! Get Results</Text>
+                <View style={styles.container2}>
+                    <View>
+                        {this.state.questionNumber === this.state.anagrams.length ?
+                            <Text style={styles.youredone}>You're done!</Text>
+                            :
+                            <Text style={styles.youredone}>Time's up!</Text>
+                        }
+                    </View>
 
                     <TouchableNativeFeedback onPress={this.onResultsClicked.bind(this)}>
                         <View style={styles.wideButton}>
@@ -155,6 +161,19 @@ export class AnagramGame extends Component {
 
         let currentAnagram = this.state.anagrams[this.state.questionNumber].question;
 
+        let timerStyle = {
+            textAlign: "center",
+            fontSize: 40,
+            marginTop: 10,
+            color: "green"
+        };
+
+        if (this.state.timeRemaining < 60) {
+            timerStyle.color = "red"
+        } else if (this.state.timeRemaining < 120) {
+            timerStyle.color = "#cc0";
+        }
+
         return (
             <View style={styles.container}>
                 <Icon.ToolbarAndroid
@@ -163,12 +182,10 @@ export class AnagramGame extends Component {
                     navIconName="arrow-left"
                     onIconClicked={this.onBackClicked.bind(this)}
                 />
-                <Text>{this.timeToString()}</Text>
-                <AnagramDisplay
-                    anagram={currentAnagram}
-                />
+                <Text style={timerStyle}>{this.timeToString()}</Text>
+                <AnagramDisplay anagram={currentAnagram} />
 
-                <Text>Your Guess:</Text>
+                <Text style={styles.guessText}>Your Guess:</Text>
                 <TextInput
                     style={{height: 40, borderColor: 'gray', borderWidth: 2, margin: 10}}
                     onChangeText={(guess) => this.setState({guess})}
@@ -196,6 +213,13 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         backgroundColor: '#F5FCFF',
     },
+    container2: {
+        flex: 1,
+        justifyContent: 'space-between',
+        alignItems: 'stretch',
+        backgroundColor: '#F5FCFF',
+        paddingTop: 20
+    },
     toolbar: {
         height: 56,
         backgroundColor: '#e9eaed'
@@ -204,13 +228,20 @@ const styles = StyleSheet.create({
         backgroundColor: '#1FB6FF',
         margin: 10,
         marginTop: 0,
-        marginBottom: 5,
+        marginBottom: 30,
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
     wideButtonText: {
         fontSize: 20
+    },
+    guessText: {
+        marginLeft: 10
+    },
+    youredone: {
+        fontSize: 40,
+        textAlign: "center"
     }
 });
 
