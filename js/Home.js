@@ -60,18 +60,22 @@ export class Home extends Component {
         return (
             <View style={styles.container}>
 
-                <Text style={styles.toolbar}>Nagrama!</Text>
-                <Text style={styles.centerText}>The Anagram Game</Text>
-                <TouchableNativeFeedback onPress={this.onAboutClicked.bind(this)}>
-                    <View style={styles.wideButton}>
-                        <Text style={styles.wideButtonText}>About</Text>
-                    </View>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback onPress={this.onChallengeClicked.bind(this)}>
-                    <View style={styles.wideButton}>
-                        <Text style={styles.wideButtonText}>Challenges</Text>
-                    </View>
-                </TouchableNativeFeedback>
+                <View style={styles.toolbar}>
+                    <Text style={styles.toolbarText}>Nagrama!</Text>
+                    <Text style={styles.centerText}>The Anagram Game</Text>
+                </View>
+                <View style={styles.buttons}>
+                    <TouchableNativeFeedback onPress={this.onAboutClicked.bind(this)}>
+                        <View style={styles.wideButton}>
+                            <Text style={styles.wideButtonText}>About</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                    <TouchableNativeFeedback onPress={this.onChallengeClicked.bind(this)}>
+                        <View style={styles.wideButton}>
+                            <Text style={styles.wideButtonText}>Challenges</Text>
+                        </View>
+                    </TouchableNativeFeedback>
+                </View>
             </View>
         );
     }
@@ -93,26 +97,32 @@ const styles = StyleSheet.create({
         height: 150,
         marginBottom: 30,
         backgroundColor: '#1FB6FF',
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: 15
+    },
+    toolbarText: {
         fontSize: 50
     },
     wideButton: {
         backgroundColor: '#1FB6FF',
         margin: 10,
         marginTop: 0,
-        marginBottom: 5,
+        marginBottom: 50,
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
     centerText: {
-        margin: 10,
-        marginTop: 0,
-        marginBottom: 30,
-        justifyContent: 'center',
-        alignItems: 'center'
+        textAlign: "center",
+        fontSize: 20
     },
     wideButtonText: {
         fontSize: 20
+    },
+    buttons: {
+        flex: 1,
+        justifyContent: "center"
     }
 });
 
