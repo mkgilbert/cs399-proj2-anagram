@@ -76,7 +76,7 @@ export class Challenge extends Component {
                     navIconName="arrow-left"
                     onIconClicked={this.onBackClicked.bind(this)}
                 />
-                <Text>Select a challenge</Text>
+                <Text style={styles.centerText}>Select a challenge</Text>
                 <TouchableNativeFeedback onPress={this.onEasyClicked.bind(this)}>
                     <View style={styles.wideButton}>
                         <Text style={styles.wideButtonText}>Easy</Text>
@@ -109,6 +109,11 @@ const styles = StyleSheet.create({
         height: 56,
         backgroundColor: '#e9eaed'
     },
+    centerText: {
+        textAlign: "center",
+        margin: 20,
+        fontSize: 30
+    },
     row: {
         justifyContent: 'center',
         alignItems: 'flex-end',
@@ -120,7 +125,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1FB6FF',
         margin: 10,
         marginTop: 0,
-        marginBottom: 5,
+        marginBottom: 30,
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
