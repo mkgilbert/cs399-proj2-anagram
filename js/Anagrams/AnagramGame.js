@@ -56,10 +56,6 @@ export class AnagramGame extends Component {
             guess: "",
             timeRemaining: 300
         };
-
-        setInterval(() => {
-            this.setState({timeRemaining: this.state.timeRemaining - 1})
-        }, 1000);
     }
 
     /**
@@ -67,6 +63,9 @@ export class AnagramGame extends Component {
      */
     componentDidMount() {
         BackAndroid.addEventListener("hardwareBackPress", this.onBackClickedEH);
+        this.timeInterval = setInterval(() => {
+            this.setState({timeRemaining: this.state.timeRemaining - 1})
+        }, 1000);
     }
 
     /**
@@ -74,6 +73,7 @@ export class AnagramGame extends Component {
      */
     componentWillUnmount() {
         BackAndroid.removeEventListener("hardwareBackPress", this.onBackClickedEH);
+        clearInterval(this.timeInterval);
     }
 
     /**
