@@ -39,7 +39,7 @@ export class AnagramGame extends Component {
                 { "question": "mutilate", "answer": "ultimate" },
                 { "question": "thickens", "answer": "kitchens" },
                 { "question": "wreathes", "answer": "weathers" },
-                { "question": "nameless", "answer": "salesman" }
+                { "question": "nameless", "answer": "salesmen" }
             ];
         }
         else {
@@ -103,7 +103,7 @@ export class AnagramGame extends Component {
     onResultsClicked() {
         this.props.navigator.push({
             id: "results",
-            gameData: "testing"
+            gameData: this.state.anagrams
         });
         //this.props.onResults();
     }

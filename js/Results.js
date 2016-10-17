@@ -23,9 +23,6 @@ export class Results extends Component {
         super(props);
         // An event handler for the back button clicked - used by the component mounting and unmounting callbacks
         this.onBackClickedEH = this.onBackClicked.bind(this);
-
-        // store game data that was passed into the route from the navigator.push() method
-        this.gameData = this.props.route.gameData;
     }
 
     /**
@@ -68,24 +65,57 @@ export class Results extends Component {
      * Render the component
      */
     render() {
+        let gameData = this.props.route.gameData;
+        let colStyle = {
+            flex: 1,
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: 16
+        };
         return (
             <View style={styles.container}>
                 <Icon.ToolbarAndroid
                     style={styles.toolbar}
                     title="Results"
                 />
-                <Text>Results Page</Text>
-                <Text>Total anagrams: {this.gameData}</Text>
-                <TouchableNativeFeedback onPress={this.onHomeClicked.bind(this)}>
-                    <View style={styles.wideButton}>
-                        <Text style={styles.wideButtonText}>Back to Home</Text>
+                <View style={styles.content}>
+                    <View>
+                        <View style={styles.row}>
+                            <Text style={colStyle}>Anagram</Text>
+                            <Text style={colStyle}>Answer</Text>
+                            <Text style={colStyle}>Your Guess</Text>
+                        </View>
+                        {gameData.map(function(anagram, i) {
+                            colStyle = {
+                                flex: 1,
+                                textAlign: "center",
+                                fontSize: 14,
+                                color: "red"
+                            };
+                            if (anagram.guess.toLowerCase() === anagram.answer.toLowerCase())
+                                colStyle.color = "green";
+                            return (
+                                <View key={i} style={styles.row}>
+                                    <Text style={colStyle}>{anagram.question}</Text>
+                                    <Text style={colStyle}>{anagram.answer}</Text>
+                                    <Text style={colStyle}>{anagram.guess}</Text>
+                                </View>
+                            );
+                        })}
                     </View>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback onPress={this.onPlayAgainClicked.bind(this)}>
-                    <View style={styles.wideButton}>
-                        <Text style={styles.wideButtonText}>Play Again</Text>
+                    <View style={styles.buttons}>
+                        <TouchableNativeFeedback onPress={this.onHomeClicked.bind(this)}>
+                            <View style={styles.wideButton}>
+                                <Text style={styles.wideButtonText}>Back to Home</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback onPress={this.onPlayAgainClicked.bind(this)}>
+                            <View style={styles.wideButton}>
+                                <Text style={styles.wideButtonText}>Play Again</Text>
+                            </View>
+                        </TouchableNativeFeedback>
                     </View>
-                </TouchableNativeFeedback>
+                </View>
             </View>
         );
     }
@@ -94,7 +124,7 @@ export class Results extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         alignItems: 'stretch',
         backgroundColor: '#F5FCFF',
     },
@@ -102,24 +132,32 @@ const styles = StyleSheet.create({
         height: 56,
         backgroundColor: '#e9eaed'
     },
+    content: {
+        flex: 1,
+        justifyContent: "space-between"
+    },
     row: {
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         padding: 10,
         borderBottomWidth: 0.5,
-        borderBottomColor: '#666666'
+        borderBottomColor: '#cccccc',
+        flexDirection: "row"
     },
     wideButton: {
         backgroundColor: '#1FB6FF',
         margin: 10,
         marginTop: 0,
-        marginBottom: 5,
+        marginBottom: 20,
         padding: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },
     wideButtonText: {
         fontSize: 20
+    },
+    buttons: {
+        marginBottom: 0
     }
 });
 
