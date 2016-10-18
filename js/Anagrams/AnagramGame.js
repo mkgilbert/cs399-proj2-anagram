@@ -35,29 +35,28 @@ export class AnagramGame extends Component {
 
         if (this.difficulty == "hard") {
             anagrams = [
-                { "question": "resells", "answer": "sellers" },
-                { "question": "mutilate", "answer": "ultimate" },
-                { "question": "thickens", "answer": "kitchens" },
-                { "question": "wreathes", "answer": "weathers" },
-                { "question": "nameless", "answer": "salesmen" }
+                { "question": "resells", "answer": "sellers", "guess": ""},
+                { "question": "mutilate", "answer": "ultimate", "guess": ""},
+                { "question": "thickens", "answer": "kitchens", "guess": ""},
+                { "question": "wreathes", "answer": "weathers", "guess": ""},
+                { "question": "nameless", "answer": "salesmen", "guess": ""}
             ];
         }
         else {
             anagrams = [
-                { "question": "map", "answer": "amp" },
-                { "question": "ant", "answer": "tan" },
-                { "question": "how", "answer": "who" },
-                { "question": "clam", "answer": "calm" },
-                { "question": "dial", "answer": "laid" },
+                { "question": "map", "answer": "amp", "guess": ""},
+                { "question": "ant", "answer": "tan", "guess": ""},
+                { "question": "how", "answer": "who", "guess": ""},
+                { "question": "clam", "answer": "calm", "guess": ""},
+                { "question": "dial", "answer": "laid", "guess": ""},
             ];
         }
         this.state = {
             anagrams: anagrams,
             questionNumber: 0,
             guess: "",
-            timeRemaining: 150,
-            questionsRemaining: anagrams.length,
-            skipped: [1]
+            timeRemaining: 500,
+            questionsRemaining: anagrams.length
         };
     }
 
@@ -95,11 +94,17 @@ export class AnagramGame extends Component {
         let guess = this.state.guess;
         let anagrams = clone(this.state.anagrams);
         anagrams[this.state.questionNumber].guess = guess;
-        let index = this.getNextAnagramIndex();
-        let remaining = this.state.questionsRemaining;
-        if (index !== -1) {
-            remaining = this.state.questionsRemaining - 1;
+        let index = this.state.questionNumber;
+        if (this.state.questionsRemaining > 0) {
+            let question = (this.state.questionNumber + 1) % anagrams.length;
+            for (let i = question; i < anagrams.length; i += 1) {
+                if (anagrams[i % anagrams.length].guess === "") {
+                    index = i % anagrams.length;
+                    break;
+                }
+            }
         }
+        let remaining = this.state.questionsRemaining - 1;
         this.setState({
             anagrams: anagrams,
             questionNumber: index,
@@ -108,24 +113,17 @@ export class AnagramGame extends Component {
         });
     }
 
-    getNextAnagramIndex() {
-        if (this.state.questionNumber === this.state.anagrams.length - 1) {
-            if (this.state.skipped.length === 1) {
-                return this.state.skipped.pop();
-            } else {
-                return this.state.questionNumber;
-            }
-        } else {
-            return this.state.questionNumber + 1;
-        }
-    }
-
     onSkipClicked() {
-        let alreadySkipped = this.state.skipped.indexOf(this.state.questionNumber);
-        if (alreadySkipped !== -1) {
-            this.state.skipped.push(this.state.questionNumber);
+        let index = this.state.questionNumber;
+        if (this.state.questionsRemaining > 0) {
+            let question = (this.state.questionNumber + 1) % this.state.anagrams.length;
+            for (let i = question; i < this.state.anagrams.length; i += 1) {
+                if (this.state.anagrams[i % this.state.anagrams.length].guess === "") {
+                    index = i % this.state.anagrams.length;
+                    break;
+                }
+            }
         }
-        let index = this.getNextAnagramIndex();
         this.setState({
             questionNumber: index,
             guess: ""
@@ -171,7 +169,6 @@ export class AnagramGame extends Component {
         if (this.state.questionsRemaining === 0 || this.state.timeRemaining <= 0) {
             return (
                 <View style={styles.container2}>
-                    <Text>{this.state.questionNumber}</Text>
                     <View>
                         {this.state.questionsRemaining === 0 ?
                             <Text style={styles.youredone}>You're done!</Text>
@@ -189,10 +186,7 @@ export class AnagramGame extends Component {
             );
         }
 
-        let currentAnagram = null;
-        if (this.state.questionNumber >= 0 && this.state.questionNumber < this.state.anagrams.length) {
-            currentAnagram = this.state.anagrams[this.state.questionNumber].question;
-        }
+        let currentAnagram = this.state.anagrams[this.state.questionNumber].question;
 
         let timerStyle = {
             textAlign: "center",
@@ -209,7 +203,6 @@ export class AnagramGame extends Component {
 
         return (
             <View style={styles.container}>
-                <Text>{this.state.questionNumber}</Text>
                 <Icon.ToolbarAndroid
                     style={styles.toolbar}
                     title={this.getPageTitle()}
