@@ -55,7 +55,9 @@ export class AnagramGame extends Component {
             anagrams: anagrams,
             questionNumber: 0,
             guess: "",
-            timeRemaining: 150
+            timeRemaining: 150,
+            questionsRemaining: anagrams.length,
+            skipped: [1]
         };
     }
 
@@ -89,15 +91,45 @@ export class AnagramGame extends Component {
     /**
      * Called when the next button has been pressed
      */
-    onNextClicked(currentAnagram) {
+    onNextClicked() {
         let guess = this.state.guess;
         let anagrams = clone(this.state.anagrams);
         anagrams[this.state.questionNumber].guess = guess;
+        let index = this.getNextAnagramIndex();
+        let remaining = this.state.questionsRemaining;
+        if (index !== -1) {
+            remaining = this.state.questionsRemaining - 1;
+        }
         this.setState({
             anagrams: anagrams,
-            questionNumber: this.state.questionNumber + 1,
+            questionNumber: index,
+            questionsRemaining: remaining,
             guess: ""
         });
+    }
+
+    getNextAnagramIndex() {
+        if (this.state.questionNumber === this.state.anagrams.length - 1) {
+            if (this.state.skipped.length === 1) {
+                return this.state.skipped.pop();
+            } else {
+                return this.state.questionNumber;
+            }
+        } else {
+            return this.state.questionNumber + 1;
+        }
+    }
+
+    onSkipClicked() {
+        let alreadySkipped = this.state.skipped.indexOf(this.state.questionNumber);
+        if (alreadySkipped !== -1) {
+            this.state.skipped.push(this.state.questionNumber);
+        }
+        let index = this.getNextAnagramIndex();
+        this.setState({
+            questionNumber: index,
+            guess: ""
+        })
     }
 
     onResultsClicked() {
@@ -131,19 +163,17 @@ export class AnagramGame extends Component {
         return diff + " mode challenge";
     }
 
-    getLength(hash) {
-        return Object.keys(hash).length;
-    }
     /**
      * Render the component
      */
     render() {
 
-        if (this.state.questionNumber === this.state.anagrams.length || this.state.timeRemaining <= 0) {
+        if (this.state.questionsRemaining === 0 || this.state.timeRemaining <= 0) {
             return (
                 <View style={styles.container2}>
+                    <Text>{this.state.questionNumber}</Text>
                     <View>
-                        {this.state.questionNumber === this.state.anagrams.length ?
+                        {this.state.questionsRemaining === 0 ?
                             <Text style={styles.youredone}>You're done!</Text>
                             :
                             <Text style={styles.youredone}>Time's up!</Text>
@@ -159,7 +189,10 @@ export class AnagramGame extends Component {
             );
         }
 
-        let currentAnagram = this.state.anagrams[this.state.questionNumber].question;
+        let currentAnagram = null;
+        if (this.state.questionNumber >= 0 && this.state.questionNumber < this.state.anagrams.length) {
+            currentAnagram = this.state.anagrams[this.state.questionNumber].question;
+        }
 
         let timerStyle = {
             textAlign: "center",
@@ -176,6 +209,7 @@ export class AnagramGame extends Component {
 
         return (
             <View style={styles.container}>
+                <Text>{this.state.questionNumber}</Text>
                 <Icon.ToolbarAndroid
                     style={styles.toolbar}
                     title={this.getPageTitle()}
@@ -183,6 +217,7 @@ export class AnagramGame extends Component {
                     onIconClicked={this.onBackClicked.bind(this)}
                 />
                 <Text style={timerStyle}>{this.timeToString()}</Text>
+                <Text>{this.state.questionsRemaining} remaining</Text>
                 <AnagramDisplay anagram={currentAnagram} />
 
                 <Text style={styles.guessText}>Your Guess:</Text>
@@ -192,9 +227,14 @@ export class AnagramGame extends Component {
                     value={this.state.guess}
                 />
 
-                <TouchableNativeFeedback onPress={this.onNextClicked.bind(this, currentAnagram)}>
+                <TouchableNativeFeedback onPress={this.onNextClicked.bind(this)}>
                     <View style={styles.wideButton}>
                         <Text style={styles.wideButtonText}>Next</Text>
+                    </View>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={this.onSkipClicked.bind(this)}>
+                    <View style={styles.wideButton}>
+                        <Text style={styles.wideButtonText}>Skip</Text>
                     </View>
                 </TouchableNativeFeedback>
             </View>
